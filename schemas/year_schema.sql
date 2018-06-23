@@ -138,7 +138,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`year_names` (
     REFERENCES `mydb`.`dynasties` (`id`)
     ON DELETE NO ACTION
     ON UPDATE CASCADE)
-ENGINE = InnoDB
+ENGINE = InnoDB;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
