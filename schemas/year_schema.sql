@@ -96,7 +96,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`years` (
   `order` INT(11) NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `order_UNIQUE` (`order` ASC))
-ENGINE = InnoDB
+ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
