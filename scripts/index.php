@@ -87,7 +87,7 @@ if (isset($_POST["import"])) {
 		$file = fopen($yearFile, "r");
         
         while (($column = fgetcsv($file, 10000, ",")) !== FALSE) {
-            $sqlInsert = "INSERT into year_names (year_number,year_and_eponym,type,order,ruler_id,year_id,period_id,dynasty_id) values ('" . $column[1] . "','" . $column[2] . "','" . $column[5] . "'," . $column[3] . "," . "(select id from rulers where ruler = '".$column[2]."')" . "," . "(select id from years where date = '".$column[6]."')" . "," . "(select period_id from rulers where ruler = '".$column[2]."')" . "," . "(select id from dynasties where dynasty = '".$column[1]."')" . ")";
+            $sqlInsert = "INSERT into year_names (year_number,year_and_eponym,`type`,`order`,ruler_id,year_id,period_id,dynasty_id) values ('" . $column[1] . "','" . $column[2] . "','" . $column[5] . "'," . $column[3] . "," . "(select id from rulers where ruler = '".$column[2]."')" . "," . "(select id from years where date = '".$column[6]."')" . "," . "(select period_id from rulers where ruler = '".$column[2]."')" . "," . "(select id from dynasties where dynasty = '".$column[1]."')" . ")";
 
             $result = mysqli_query($conn, $sqlInsert);
             
@@ -108,7 +108,7 @@ if (isset($_POST["import"])) {
 
 <head>
 <script src="jquery-3.2.1.min.js"></script>
-
+<!-- custom CSS -->
 <style>
 body {
 	font-family: Arial;
@@ -175,6 +175,7 @@ div#response.display-block {
     display: block;
 }
 </style>
+<!-- custom CSS -->
 <script type="text/javascript">
 $(document).ready(function() {
     $("#frmCSVImport").on("submit", function () {
