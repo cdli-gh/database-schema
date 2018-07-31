@@ -15,7 +15,12 @@ if (isset($_POST["import"])) {
         $file = fopen($provinenceFile, "r");
         
         while (($column = fgetcsv($file, 10000, ",")) !== FALSE) {
-            $sqlInsert = "INSERT into proveniences (id,google_earth_collection,google_earth_provenience,provenience) values ('" . $column[0] . "','" . $column[1] . "','" . $column[2] . "','" . $column[3] . "')";
+            $sqlInsert = "INSERT into proveniences (
+                id,google_earth_collection,google_earth_provenience,provenience,geo_coordinates
+                ) 
+                values (
+                    '" . $column[0] . "','" . $column[1] . "','" . $column[2] . "','" . $column[3] . "','" . $column[4] . "'
+                )";
 
             $result = mysqli_query($conn, $sqlInsert);
             
@@ -33,7 +38,8 @@ if (isset($_POST["import"])) {
 		$file = fopen($dynastyFile, "r");
         
         while (($column = fgetcsv($file, 10000, ",")) !== FALSE) {
-            $sqlInsert = "INSERT into dynasties (polity,dynasty,order,provenience_id) values ('" . $column[1] . "','" . $column[2] . "'," . $column[3] . ","."(select id from provenience where name = ''))";
+            $sqlInsert = "INSERT into dynasties (
+                polity,dynasty,order,provenience_id) values ('" . $column[1] . "','" . $column[2] . "'," . $column[3] . ","."(select id from provenience where name = ''))";
 
             $result = mysqli_query($conn, $sqlInsert);
             
@@ -51,7 +57,7 @@ if (isset($_POST["import"])) {
 		$file = fopen($periodFile, "r");
         
         while (($column = fgetcsv($file, 10000, ",")) !== FALSE) {
-            $sqlInsert = "INSERT into periods (period,order) values ('" . $column[1] . "',".$column[2].")";
+            $sqlInsert = "INSERT into periods (`period`,`order`) values ('" . $column[1] . "',".$column[2].")";
 
             $result = mysqli_query($conn, $sqlInsert);
             
@@ -69,7 +75,7 @@ if (isset($_POST["import"])) {
 		$file = fopen($rulerFile, "r");
         
         while (($column = fgetcsv($file, 10000, ",")) !== FALSE) {
-            $sqlInsert = "INSERT into rulers (id,ruler,order,period_id,dynasty_id) values ('" . $column[0] . "','" . $column[1] . "','" . $column[2] . "',". "(select id from dynasties where dynasty = '".$column[2]."')" .",". "(select id from periods where period = '".$column[3]."')" .")";
+            $sqlInsert = "INSERT into rulers (id,ruler,`order`,period_id,dynasty_id) values ('" . $column[0] . "','" . $column[1] . "','" . $column[2] . "',". "(select id from dynasties where dynasty = '".$column[2]."')" .",". "(select id from periods where period = '".$column[3]."')" .")";
 
             $result = mysqli_query($conn, $sqlInsert);
             
