@@ -4,10 +4,14 @@ $conn = mysqli_connect("localhost", "username", "password", "dbname");
 if (isset($_POST["import"])) {
     
     $provinenceFile = $_FILES["file"]["tmp_name"];
+    $dynastyFile = $_FILES["file"]["tmp_name"];
 	$periodFile = $_FILES["file"]["tmp_name"];
-	$dynastyFile = $_FILES["file"]["tmp_name"];
 	$rulerFile = $_FILES["file"]["tmp_name"];
-	$yearFile = $_FILES["file"]["tmp_name"];
+    $yearFile = $_FILES["file"]["tmp_name"];
+    $yearnameFile = $_FILES["file"]["tmp_name"];
+    $dateFile = $_FILES["file"]["tmp_name"];
+    $monthFile = $_FILES["file"]["tmp_name"];
+    $monthnameFile = $_FILES["file"]["tmp_name"];
     $message = "";
     if ($_FILES["file"]["size"] > 0) {
         
@@ -138,8 +142,8 @@ if (isset($_POST["import"])) {
         }
         fclose($file);
 
-        // loading and storing year data
-		$file = fopen($yearFile, "r");
+        // loading and storing year_name data
+		$file = fopen($yearnameFile, "r");
         
         while (($column = fgetcsv($file, 10000, ",")) !== FALSE) {
             $sqlInsert = "INSERT into 
@@ -168,7 +172,7 @@ if (isset($_POST["import"])) {
 		fclose($file);
         
         // loading and storing dates data
-		$file = fopen($yearFile, "r");
+		$file = fopen($dateFile, "r");
         
         while (($column = fgetcsv($file, 10000, ",")) !== FALSE) {
             $sqlInsert = "INSERT into 
@@ -193,7 +197,7 @@ if (isset($_POST["import"])) {
         fclose($file);
         
         // loading and storing months data
-		$file = fopen($yearFile, "r");
+		$file = fopen($monthFile, "r");
         
         while (($column = fgetcsv($file, 10000, ",")) !== FALSE) {
             $sqlInsert = "INSERT into 
@@ -218,7 +222,7 @@ if (isset($_POST["import"])) {
         fclose($file);
 
         // loading and storing month_names data
-		$file = fopen($yearFile, "r");
+		$file = fopen($monthnameFile, "r");
         
         while (($column = fgetcsv($file, 10000, ",")) !== FALSE) {
             $sqlInsert = "INSERT into 
@@ -361,11 +365,11 @@ $(document).ready(function() {
                         File</label> <input type="file" name="file"
                         id="file" accept=".csv">
 						<br>
-					<label class="col-md-4 control-label">Choose Periods CSV
+					<label class="col-md-4 control-label">Choose Dynasty CSV
                         File</label> <input type="file" name="file"
                         id="file" accept=".csv">
 						<br>
-					<label class="col-md-4 control-label">Choose Dynasty CSV
+					<label class="col-md-4 control-label">Choose Period CSV
                         File</label> <input type="file" name="file"
                         id="file" accept=".csv">
 						<br>
@@ -376,7 +380,23 @@ $(document).ready(function() {
 					<label class="col-md-4 control-label">Choose Year CSV
                         File</label> <input type="file" name="file"
                         id="file" accept=".csv">
-						<br>
+                        <br>
+                    <label class="col-md-4 control-label">Choose Year Name CSV
+                        File</label> <input type="file" name="file"
+                        id="file" accept=".csv">
+                        <br>
+                    <label class="col-md-4 control-label">Choose Date CSV
+                        File</label> <input type="file" name="file"
+                        id="file" accept=".csv">
+                        <br>
+                    <label class="col-md-4 control-label">Choose Month CSV
+                        File</label> <input type="file" name="file"
+                        id="file" accept=".csv">
+                        <br>
+                    <label class="col-md-4 control-label">Choose Month Name CSV
+                        File</label> <input type="file" name="file"
+                        id="file" accept=".csv">
+                        <br>
                     <button type="submit" id="submit" name="import"
                         class="btn-submit">Import</button>
                     <br />
