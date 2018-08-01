@@ -71,7 +71,7 @@ if (isset($_POST["import"])) {
         }
 		fclose($file);
 		
-		// loading and storing ruler data
+		// loading and storing ruler data table
 		$file = fopen($rulerFile, "r");
         
         while (($column = fgetcsv($file, 10000, ",")) !== FALSE) {
@@ -93,6 +93,24 @@ if (isset($_POST["import"])) {
 		$file = fopen($yearFile, "r");
         
         while (($column = fgetcsv($file, 10000, ",")) !== FALSE) {
+            $sqlInsert = "INSERT into years (year_number,`order`) values ('" . $column[1] . "','" . $column[2] . "')";
+
+            $result = mysqli_query($conn, $sqlInsert);
+            
+            if (! empty($result)) {
+                $type = "success";
+                $message = $message."Year's CSV Data Imported into the Database<br>";
+            } else {
+                $type = "error";
+                $message = $message."Problem in Importing Year's CSV Data<br>";
+            }
+        }
+        fclose($file);
+
+        // loading and storing year data
+		$file = fopen($yearFile, "r");
+        
+        while (($column = fgetcsv($file, 10000, ",")) !== FALSE) {
             $sqlInsert = "INSERT into year_names (year_number,year_and_eponym,`type`,`order`,ruler_id,year_id,period_id,dynasty_id) values ('" . $column[1] . "','" . $column[2] . "','" . $column[5] . "'," . $column[3] . "," . "(select id from rulers where ruler = '".$column[2]."')" . "," . "(select id from years where year = '".$column[6]."')" . "," . "(select id from periods where period = '".$column[2]."')" . "," . "(select id from dynasties where dynasty = '".$column[1]."')" . ")";
 
             $result = mysqli_query($conn, $sqlInsert);
@@ -106,6 +124,62 @@ if (isset($_POST["import"])) {
             }
         }
 		fclose($file);
+        
+        // loading and storing dates data
+		$file = fopen($yearFile, "r");
+        
+        while (($column = fgetcsv($file, 10000, ",")) !== FALSE) {
+            $sqlInsert = "INSERT into dates (day_number,date_remarks,`order`,is_uncertain) values ('" . $column[1] . "','" . $column[2] . "','" . $column[3] . "','" . $column[4] . "')";
+
+            $result = mysqli_query($conn, $sqlInsert);
+            
+            if (! empty($result)) {
+                $type = "success";
+                $message = $message."Year's CSV Data Imported into the Database<br>";
+            } else {
+                $type = "error";
+                $message = $message."Problem in Importing Year's CSV Data<br>";
+            }
+        }
+        fclose($file);
+        
+        // loading and storing year data
+		$file = fopen($yearFile, "r");
+        
+        while (($column = fgetcsv($file, 10000, ",")) !== FALSE) {
+            $sqlInsert = "INSERT into months (composite_month_name,`order`) values ('" . $column[1] . "','" . $column[2] . "')";
+
+            $result = mysqli_query($conn, $sqlInsert);
+            
+            if (! empty($result)) {
+                $type = "success";
+                $message = $message."Year's CSV Data Imported into the Database<br>";
+            } else {
+                $type = "error";
+                $message = $message."Problem in Importing Year's CSV Data<br>";
+            }
+        }
+        fclose($file);
+
+        // loading and storing year data
+		$file = fopen($yearFile, "r");
+        
+        while (($column = fgetcsv($file, 10000, ",")) !== FALSE) {
+            $sqlInsert = "INSERT into years (year_number,`order`) values ('" . $column[1] . "','" . $column[2] . "')";
+
+            $result = mysqli_query($conn, $sqlInsert);
+            
+            if (! empty($result)) {
+                $type = "success";
+                $message = $message."Year's CSV Data Imported into the Database<br>";
+            } else {
+                $type = "error";
+                $message = $message."Problem in Importing Year's CSV Data<br>";
+            }
+        }
+        fclose($file);
+        
+        
     }
 }
 ?>
