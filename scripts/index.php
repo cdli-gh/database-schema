@@ -15,12 +15,14 @@ if (isset($_POST["import"])) {
         $file = fopen($provinenceFile, "r");
         
         while (($column = fgetcsv($file, 10000, ",")) !== FALSE) {
-            $sqlInsert = "INSERT into proveniences (
-                id,google_earth_collection,google_earth_provenience,provenience,geo_coordinates
+            $sqlInsert = "INSERT into 
+                proveniences (
+                    id,google_earth_collection,google_earth_provenience,provenience,geo_coordinates
                 ) 
                 values (
                     '" . $column[0] . "','" . $column[1] . "','" . $column[2] . "','" . $column[3] . "','" . $column[4] . "'
-                )";
+                )
+            ";
 
             $result = mysqli_query($conn, $sqlInsert);
             
@@ -38,8 +40,14 @@ if (isset($_POST["import"])) {
 		$file = fopen($dynastyFile, "r");
         
         while (($column = fgetcsv($file, 10000, ",")) !== FALSE) {
-            $sqlInsert = "INSERT into dynasties (
-                polity,dynasty,order,provenience_id) values ('" . $column[1] . "','" . $column[2] . "'," . $column[3] . ","."(select id from provenience where name = ''))";
+            $sqlInsert = "INSERT into 
+                dynasties (
+                    polity,dynasty,order,provenience_id
+                )
+                values (
+                    '" . $column[1] . "','" . $column[2] . "','" . $column[3] . "',"."(select id from provenience where name = '')
+                )
+            ";
 
             $result = mysqli_query($conn, $sqlInsert);
             
@@ -57,7 +65,14 @@ if (isset($_POST["import"])) {
 		$file = fopen($periodFile, "r");
         
         while (($column = fgetcsv($file, 10000, ",")) !== FALSE) {
-            $sqlInsert = "INSERT into periods (`period`,`order`) values ('" . $column[1] . "',".$column[2].")";
+            $sqlInsert = "INSERT into 
+                periods (
+                    `period`,`order`
+                ) 
+                values (
+                    '" . $column[1] . "',".$column[2]."
+                )
+            ";
 
             $result = mysqli_query($conn, $sqlInsert);
             
@@ -75,7 +90,16 @@ if (isset($_POST["import"])) {
 		$file = fopen($rulerFile, "r");
         
         while (($column = fgetcsv($file, 10000, ",")) !== FALSE) {
-            $sqlInsert = "INSERT into rulers (id,ruler,`order`,period_id,dynasty_id) values ('" . $column[0] . "','" . $column[1] . "','" . $column[2] . "',". "(select id from dynasties where dynasty = '".$column[2]."')" .",". "(select id from periods where period = '".$column[3]."')" .")";
+            $sqlInsert = "INSERT into 
+                rulers (
+                    id,ruler,`order`,period_id,dynasty_id
+                )
+                values (
+                    '" . $column[0] . "','" . $column[1] . "','" . $column[2] . "',
+                    ". "(select id from dynasties where dynasty = '".$column[2]."')" .",
+                    ". "(select id from periods where period = '".$column[3]."')" ."
+                )
+            ";
 
             $result = mysqli_query($conn, $sqlInsert);
             
@@ -93,7 +117,14 @@ if (isset($_POST["import"])) {
 		$file = fopen($yearFile, "r");
         
         while (($column = fgetcsv($file, 10000, ",")) !== FALSE) {
-            $sqlInsert = "INSERT into years (year_number,`order`) values ('" . $column[1] . "','" . $column[2] . "')";
+            $sqlInsert = "INSERT into 
+                years (
+                    year_number,`order`
+                ) 
+                values (
+                    '" . $column[1] . "','" . $column[2] . "'
+                )
+            ";
 
             $result = mysqli_query($conn, $sqlInsert);
             
@@ -111,7 +142,18 @@ if (isset($_POST["import"])) {
 		$file = fopen($yearFile, "r");
         
         while (($column = fgetcsv($file, 10000, ",")) !== FALSE) {
-            $sqlInsert = "INSERT into year_names (year_number,year_and_eponym,`type`,`order`,ruler_id,year_id,period_id,dynasty_id) values ('" . $column[1] . "','" . $column[2] . "','" . $column[5] . "'," . $column[3] . "," . "(select id from rulers where ruler = '".$column[2]."')" . "," . "(select id from years where year = '".$column[6]."')" . "," . "(select id from periods where period = '".$column[2]."')" . "," . "(select id from dynasties where dynasty = '".$column[1]."')" . ")";
+            $sqlInsert = "INSERT into 
+                year_names (
+                    year_number,year_and_eponym,`type`,`order`,ruler_id,year_id,period_id,dynasty_id
+                ) 
+                values (
+                    '" . $column[1] . "','" . $column[2] . "','" . $column[5] . "'," . $column[3] . ",
+                    " . "(select id from rulers where ruler = '".$column[2]."')" . ",
+                    " . "(select id from years where year = '".$column[6]."')" . ",
+                    " . "(select id from periods where period = '".$column[2]."')" . ",
+                    " . "(select id from dynasties where dynasty = '".$column[1]."')" . "
+                )
+            ";
 
             $result = mysqli_query($conn, $sqlInsert);
             
@@ -129,7 +171,14 @@ if (isset($_POST["import"])) {
 		$file = fopen($yearFile, "r");
         
         while (($column = fgetcsv($file, 10000, ",")) !== FALSE) {
-            $sqlInsert = "INSERT into dates (day_number,date_remarks,`order`,is_uncertain) values ('" . $column[1] . "','" . $column[2] . "','" . $column[3] . "','" . $column[4] . "')";
+            $sqlInsert = "INSERT into 
+                dates (
+                    day_number,date_remarks,`order`,is_uncertain
+                ) 
+                values (
+                    '" . $column[1] . "','" . $column[2] . "','" . $column[3] . "','" . $column[4] . "'
+                )
+            ";
 
             $result = mysqli_query($conn, $sqlInsert);
             
@@ -143,11 +192,18 @@ if (isset($_POST["import"])) {
         }
         fclose($file);
         
-        // loading and storing year data
+        // loading and storing months data
 		$file = fopen($yearFile, "r");
         
         while (($column = fgetcsv($file, 10000, ",")) !== FALSE) {
-            $sqlInsert = "INSERT into months (composite_month_name,`order`) values ('" . $column[1] . "','" . $column[2] . "')";
+            $sqlInsert = "INSERT into 
+                months (
+                    composite_month_name,`order`
+                ) 
+                values (
+                    '" . $column[1] . "','" . $column[2] . "'
+                )
+            ";
 
             $result = mysqli_query($conn, $sqlInsert);
             
@@ -161,11 +217,18 @@ if (isset($_POST["import"])) {
         }
         fclose($file);
 
-        // loading and storing year data
+        // loading and storing month_names data
 		$file = fopen($yearFile, "r");
         
         while (($column = fgetcsv($file, 10000, ",")) !== FALSE) {
-            $sqlInsert = "INSERT into years (year_number,`order`) values ('" . $column[1] . "','" . $column[2] . "')";
+            $sqlInsert = "INSERT into 
+                month_names (
+                    month_number,`order`,`type`,month_id
+                ) 
+                values (
+                    '" . $column[1] . "','" . $column[2] . "','" . $column[3] . "'
+                )
+            ";
 
             $result = mysqli_query($conn, $sqlInsert);
             
@@ -279,7 +342,14 @@ $(document).ready(function() {
 <body>
     <h2>Import CSV file into Table</h2>
     
-    <div id="response" class="<?php if(!empty($type)) { echo $type . " display-block"; } ?>"><?php if(!empty($message)) { echo $message; } ?></div>
+    <div id="response" class="<?php if(!empty($type)) { 
+        echo $type . " display-block"; } ?>">
+        <?php 
+            if(!empty($message)) { 
+                echo $message; 
+            } 
+        ?>
+    </div>
     <div class="outer-scontainer">
         <div class="row">
 
