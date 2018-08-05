@@ -1,19 +1,19 @@
 <?php
-$conn = mysqli_connect("localhost", "username", "password", "dbname");
+$conn = mysqli_connect("database", "username", "password", "database_name");
 
 if (isset($_POST["import"])) {
     
-    $provinenceFile = $_FILES["file"]["tmp_name"];
-    $dynastyFile = $_FILES["file"]["tmp_name"];
-	$periodFile = $_FILES["file"]["tmp_name"];
-	$rulerFile = $_FILES["file"]["tmp_name"];
-    $yearFile = $_FILES["file"]["tmp_name"];
-    $yearnameFile = $_FILES["file"]["tmp_name"];
-    $dateFile = $_FILES["file"]["tmp_name"];
-    $monthFile = $_FILES["file"]["tmp_name"];
-    $monthnameFile = $_FILES["file"]["tmp_name"];
+    $provinenceFile = $_FILES["provinenceFile"]["tmp_name"];
+    $dynastyFile = $_FILES["dynastyFile"]["tmp_name"];
+	$periodFile = $_FILES["periodFile"]["tmp_name"];
+	$rulerFile = $_FILES["rulerFile"]["tmp_name"];
+    $yearFile = $_FILES["yearFile"]["tmp_name"];
+    $yearnameFile = $_FILES["yearNameFile"]["tmp_name"];
+    $dateFile = $_FILES["dateFile"]["tmp_name"];
+    $monthFile = $_FILES["monthFile"]["tmp_name"];
+    $monthnameFile = $_FILES["monthNameFile"]["tmp_name"];
     $message = "";
-    if ($_FILES["file"]["size"] > 0) {
+    if ($_FILES["provinenceFile"]["size"] > 0) {
         
 		// loading and storing provinence data
         $file = fopen($provinenceFile, "r");
@@ -21,10 +21,10 @@ if (isset($_POST["import"])) {
         while (($column = fgetcsv($file, 10000, ",")) !== FALSE) {
             $sqlInsert = "INSERT into 
                 proveniences (
-                    google_earth_collection,google_earth_provenience,provenience,geo_coordinates
+                    google_earth_collection,google_earth_provenience,provenience,
                 ) 
                 values (
-                    '" . $column[1] . "','" . $column[2] . "','" . $column[3] . "','" . $column[4] . "'
+                    '" . $column[0] . "','" . $column[1] . "','" . $column[3] . "'
                 )
             ";
 
@@ -39,18 +39,18 @@ if (isset($_POST["import"])) {
             }
         }
 		fclose($file);
-		
+	}
+	if ($_FILES["dynastyFile"]["size"] > 0) {
 		// loading and storing dynasty data
 		$file = fopen($dynastyFile, "r");
         
         while (($column = fgetcsv($file, 10000, ",")) !== FALSE) {
             $sqlInsert = "INSERT into 
                 dynasties (
-                    polity,dynasty,order,provenience_id
+                    polity,dynasty,provenience_id
                 )
                 values (
-                    '" . $column[1] . "','" . $column[2] . "','" . $column[3] . "',
-                    "."(select id from provenience where name = '')
+                    '" . $column[1] . "','" . $column[2] . "',(select id from proveniences where provenience='".$column[3]."')
                 )
             ";
 
@@ -65,7 +65,8 @@ if (isset($_POST["import"])) {
             }
         }
 		fclose($file);
-		
+	}
+	if ($_FILES["periodFile"]["size"] > 0) {
 		// loading and storing period data
 		$file = fopen($periodFile, "r");
         
@@ -75,7 +76,7 @@ if (isset($_POST["import"])) {
                     `period`,`order`
                 ) 
                 values (
-                    '" . $column[2] . "',".$column[1]."
+                    '" . $column[1] . "',".$column[2]."
                 )
             ";
 
@@ -90,22 +91,20 @@ if (isset($_POST["import"])) {
             }
         }
 		fclose($file);
-		
+	}
+	if ($_FILES["rulerFile"]["size"] > 0) {
 		// loading and storing ruler data table
 		$file = fopen($rulerFile, "r");
         
         while (($column = fgetcsv($file, 10000, ",")) !== FALSE) {
             $sqlInsert = "INSERT into 
                 rulers (
-                    id,ruler,`order`,period_id,dynasty_id
+                    ruler,`order`
                 )
                 values (
-                    '" . $column[0] . "','" . $column[1] . "','" . $column[2] . "',
-                    ". "(select id from dynasties where dynasty = '".$column[1]."')" .",
-                    ". "(select id from periods where period = '".$column[0]."')" ."
+                    '" . $column[1] . "'," . $column[2] . "
                 )
             ";
-
             $result = mysqli_query($conn, $sqlInsert);
             
             if (! empty($result)) {
@@ -117,17 +116,18 @@ if (isset($_POST["import"])) {
             }
         }
 		fclose($file);
-		
+	}
+	if ($_FILES["yearFile"]["size"] > 0) {
 		// loading and storing year data
 		$file = fopen($yearFile, "r");
         
         while (($column = fgetcsv($file, 10000, ",")) !== FALSE) {
             $sqlInsert = "INSERT into 
                 years (
-                    year_number,`order`
+                    date,`order`
                 ) 
                 values (
-                    '" . $column[1] . "','" . $column[2] . "'
+                    '" . $column[7] . "'," . $column[4] . "
                 )
             ";
 
@@ -142,7 +142,8 @@ if (isset($_POST["import"])) {
             }
         }
         fclose($file);
-
+	}
+	if ($_FILES["yearNameFile"]["size"] > 0) {
         // loading and storing year_name data
 		$file = fopen($yearnameFile, "r");
         
@@ -152,7 +153,7 @@ if (isset($_POST["import"])) {
                     year_number,year_and_eponym,`type`,`order`,ruler_id,year_id,period_id,dynasty_id
                 ) 
                 values (
-                    '" . $column[4] . "','" . $column[2] . "','" . $column[3] . "'," . $column[4] . ",
+                    '" . $column[1] . "','" . $column[2] . "','" . $column[3] . "'," . $column[4] . ",
                     " . "(select id from rulers where ruler = '".$column[2]."')" . ",
                     " . "(select id from years where year = '".$column[6]."')" . ",
                     " . "(select id from periods where period = '".$column[2]."')" . ",
@@ -171,7 +172,8 @@ if (isset($_POST["import"])) {
             }
         }
 		fclose($file);
-        
+	}
+	if ($_FILES["dateFile"]["size"] > 0) {
         // loading and storing dates data
 		$file = fopen($dateFile, "r");
         
@@ -196,7 +198,8 @@ if (isset($_POST["import"])) {
             }
         }
         fclose($file);
-        
+	}
+	if ($_FILES["monthFile"]["size"] > 0) {
         // loading and storing months data
 		$file = fopen($monthFile, "r");
         
@@ -221,7 +224,8 @@ if (isset($_POST["import"])) {
             }
         }
         fclose($file);
-
+	}
+	if ($_FILES["monthNameFile"]["size"] > 0) {
         // loading and storing month_names data
 		$file = fopen($monthnameFile, "r");
         
@@ -332,8 +336,10 @@ $(document).ready(function() {
 	    $("#response").attr("class", "");
         $("#response").html("");
         var fileType = ".csv";
-        var regex = new RegExp("([a-zA-Z0-9\s_\\.\-:])+(" + fileType + ")$");
-        if (!regex.test($("#file").val().toLowerCase())) {
+        var regex = new RegExp("^$|([a-zA-Z0-9\s_\\.\-:])+(" + fileType + ")$");
+        if (!regex.test($("#rulerFile").val().toLowerCase())||!regex.test($("#provinenceFile").val().toLowerCase())||!regex.test($("#dynastyFile").val().toLowerCase())
+			||!regex.test($("#periodFile").val().toLowerCase())||!regex.test($("#yearFile").val().toLowerCase())||!regex.test($("#yearNameFile").val().toLowerCase())
+		||!regex.test($("#dateFile").val().toLowerCase())||!regex.test($("#monthFile").val().toLowerCase())||!regex.test($("#monthNameFile").val().toLowerCase())) {
         	    $("#response").addClass("error");
         	    $("#response").addClass("display-block");
             $("#response").html("Invalid File. Upload : <b>" + fileType + "</b> Files.");
@@ -363,40 +369,40 @@ $(document).ready(function() {
                 name="frmCSVImport" id="frmCSVImport" enctype="multipart/form-data">
                 <div class="input-row">
                     <label class="col-md-4 control-label">Choose Provinence CSV
-                        File</label> <input type="file" name="file"
-                        id="file" accept=".csv">
+                        File</label> <input type="file" name="provinenceFile"
+                        id="provinenceFile" accept=".csv">
 						<br>
 					<label class="col-md-4 control-label">Choose Dynasty CSV
-                        File</label> <input type="file" name="file"
-                        id="file" accept=".csv">
+                        File</label> <input type="file" name="dynastyFile"
+                        id="dynastyFile" accept=".csv">
 						<br>
 					<label class="col-md-4 control-label">Choose Period CSV
-                        File</label> <input type="file" name="file"
-                        id="file" accept=".csv">
+                        File</label> <input type="file" name="periodFile"
+                        id="periodFile" accept=".csv">
 						<br>
 					<label class="col-md-4 control-label">Choose Ruler CSV
-                        File</label> <input type="file" name="file"
-                        id="file" accept=".csv">
+                        File</label> <input type="file" name="rulerFile"
+                        id="rulerFile" accept=".csv">
 						<br>
 					<label class="col-md-4 control-label">Choose Year CSV
-                        File</label> <input type="file" name="file"
-                        id="file" accept=".csv">
+                        File</label> <input type="file" name="yearFile"
+                        id="yearFile" accept=".csv">
                         <br>
                     <label class="col-md-4 control-label">Choose Year Name CSV
-                        File</label> <input type="file" name="file"
-                        id="file" accept=".csv">
+                        File</label> <input type="file" name="yearNameFile"
+                        id="yearNameFile" accept=".csv">
                         <br>
                     <label class="col-md-4 control-label">Choose Date CSV
-                        File</label> <input type="file" name="file"
-                        id="file" accept=".csv">
+                        File</label> <input type="file" name="dateFile"
+                        id="dateFile" accept=".csv">
                         <br>
                     <label class="col-md-4 control-label">Choose Month CSV
-                        File</label> <input type="file" name="file"
-                        id="file" accept=".csv">
+                        File</label> <input type="file" name="monthFile"
+                        id="monthFile" accept=".csv">
                         <br>
                     <label class="col-md-4 control-label">Choose Month Name CSV
-                        File</label> <input type="file" name="file"
-                        id="file" accept=".csv">
+                        File</label> <input type="file" name="monthNameFile"
+                        id="monthNameFile" accept=".csv">
                         <br>
                     <button type="submit" id="submit" name="import"
                         class="btn-submit">Import</button>
