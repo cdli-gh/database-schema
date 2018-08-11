@@ -18,8 +18,14 @@ if (isset($_POST["import"])) {
         
 		// loading and storing provinence data
         $file = fopen($provinenceFile, "r");
-        
+        $heading=true;
         while (($column = fgetcsv($file, 10000, ",")) !== FALSE) {
+
+            if($heading){
+				$heading=false;
+				continue;
+			}
+
             $sqlInsert = "INSERT into 
                 proveniences (
                     google_earth_collection,google_earth_provenience,geo_coordinates,provenience
@@ -45,14 +51,21 @@ if (isset($_POST["import"])) {
     // loading and storing dynasty data
 	if ($_FILES["dynastyFile"]["size"] > 0) {
 		$file = fopen($dynastyFile, "r");
-        
+        $heading=true;
         while (($column = fgetcsv($file, 10000, ",")) !== FALSE) {
+
+            if($heading){
+				$heading=false;
+				continue;
+			}
+
             $sqlInsert = "INSERT into 
                 dynasties (
                     polity,dynasty,provenience_id
                 )
                 values (
-                    '" . $column[1] . "','" . $column[2] . "',(select id from proveniences where provenience='".$column[4]."')
+                    '" . $column[1] . "','" . $column[2] . "',
+                    (select id from proveniences where provenience='".$column[4]."')
                 )
             ";
 
@@ -72,8 +85,13 @@ if (isset($_POST["import"])) {
     // loading and storing period data
 	if ($_FILES["periodFile"]["size"] > 0) {
 		$file = fopen($periodFile, "r");
-        
+        $heading=true;
         while (($column = fgetcsv($file, 10000, ",")) !== FALSE) {
+            if($heading){
+				$heading=false;
+				continue;
+			}
+
             $sqlInsert = "INSERT into 
                 periods (
                     `period`,`order`
@@ -98,10 +116,17 @@ if (isset($_POST["import"])) {
     
     // loading and storing ruler data table
 	if ($_FILES["rulerFile"]["size"] > 0) {
+        $heading=true;
 		$file = fopen($rulerFile, "r");
         $set = array();
 		$i=0;
         while (($column = fgetcsv($file, 10000, ",")) !== FALSE) {
+
+            if($heading){
+				$heading=false;
+				continue;
+			}
+
 			if(!array_key_exists($column[3], $set)){
 				$i++;
 				$set[$column[3]]=$i;
@@ -195,8 +220,13 @@ if (isset($_POST["import"])) {
     // loading and storing dates data
 	if ($_FILES["dateFile"]["size"] > 0) {
 		$file = fopen($dateFile, "r");
-        
+        $heading=true;
         while (($column = fgetcsv($file, 10000, ",")) !== FALSE) {
+            if($heading){
+				$heading=false;
+				continue;
+			}
+
             $sqlInsert = "INSERT into 
                 dates (
                     day_number,date_remarks,`order`,is_uncertain
