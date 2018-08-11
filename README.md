@@ -26,6 +26,7 @@ ___
 
 2. [scripts](scripts): This folder contains the conversion and data insertion script.
 3. [search](search): This folder contains the search scripts based on use cases.
+4. [test_data_set](test_data_set): This folder contains the inserted data which is used for testing the schema.
 
 ___
 
