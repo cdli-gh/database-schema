@@ -42,7 +42,8 @@ if (isset($_POST["import"])) {
 			}
 			
 			//inserting dates
-			$l=strlen($arr[3]);
+            $l=strlen($arr[3]);
+            //Splitting Dates from RNYMD format
 			$day_no=mb_substr($arr[3],0,2);
 			if(!array_key_exists($day_no, $set_date)){
 				$j++;
